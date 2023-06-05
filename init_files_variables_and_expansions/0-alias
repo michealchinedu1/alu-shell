@@ -1,2 +1,2 @@
-#1/bin/bash
-alias alias_name='command'
+#!/bin/bash
+alias new_alias='command'
