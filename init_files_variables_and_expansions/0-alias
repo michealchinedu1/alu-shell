@@ -1,2 +1,2 @@
 #!/bin/bash
-alias new_alias='command'
+alias ll='ls -l'
