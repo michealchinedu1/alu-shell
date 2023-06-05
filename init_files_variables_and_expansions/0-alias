@@ -1,2 +1,2 @@
-#!/bin/bash
-alias new_command='original_command'
+#!/bin/bash 
+ll='ls -l'
