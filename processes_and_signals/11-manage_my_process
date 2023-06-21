@@ -1,34 +1,39 @@
 #!/usr/bin/env bash
-#
-# Manage the 'manage_my_process' daemon
-RELPATH="${0%/*}/${PROGRAM}""
-declare -A MESSAGES=(
-  
-  ['restart']='restarted'
-)
+# This script manages the manage_my_process script.
+### When passed the argument `start`:
+# - starts manage_my_process
+# - creates a file containings its PID in /var/run/my_process.pid
+# - displays "manage_my_process started"
+### When passed the argument `stop`:
+# - stops manage_my_process
+# - deletes the file /var/run/my_process.pid
+# - displays "manage_my_process stopped"
+### When passed the argument `restart`:
+# - stops manage_my_process
+# - deletes the file /var/run/my_process.pid
+# - starts manage_my_process
+# - creates a file containing its PID in /var/run/my_process.pid
+# - displays "manage_my_process restarted"
+### If any other or no arguments are passed
+#+ displays "Usage: manage_my_process {start|stop|restart}"
 
-start() {
-  exec -- "${RELPATH}" &
-  echo "$!" >| "${PIDFILE}"
-}
+if [ "$1" == "start" ]; then
+  ./manage_my_process &
+  echo $$ > /var/run/my_process.pid
+  echo "manage_my_process started"
 
-stop() {
-  trap '
-    trap RETURN
-    rm -f -- "${PIDFILE}"
-  ' RETURN
-  kill -- "$(< "${PIDFILE}")" 2> /dev/null
-}
+elif [ "$1" == "stop" ]; then
+  kill "$(pgrep -f /manage_my_process)" 
+  rm /var/run/my_process.pid
+  echo "manage_my_process stopped"
 
-restart() {
-  stop
-  start
-}
+elif [ "$1" == "restart" ]; then
+  kill "$(pgrep -f /manage_my_process)"
+  rm /var/run/my_process.pid
+  ./manage_my_process &
+  echo $$ > /var/run/my_process.pid
+  echo "manage_my_process restarted"
 
-if (( $# == 1 )) && [[ -v "MESSAGES[$1]" ]]
-then
-  "$1" && printf '%s %s\n' "${PROGRAM}" "${MESSAGES[$1]}"
 else
-  printf 'Usage: %s {start|stop|restart}\n' "${PROGRAM}"
-  exit 1
-fii
+  echo "Usage: manage_my_process {start|stop|restart}"
+fi
