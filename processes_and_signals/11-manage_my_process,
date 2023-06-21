@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 #
 # Manage the 'manage_my_process' daemon
-RELPATH="${0%/*}/${PROGRAM}""
-declare -A MESSAGES=(
-  
+
+PROGRAM='manage_my_process'
+RELPATH="${0%/*}/${PROGRAM}"
+PIDFILE="${PIDFILE:-/var/run/my_process.pid}"
+declare -A MESSAGES=( 
+  ['start']='started'
+  ['stop']='stopped'
   ['restart']='restarted'
 )
 
@@ -31,4 +35,4 @@ then
 else
   printf 'Usage: %s {start|stop|restart}\n' "${PROGRAM}"
   exit 1
-fii
+fi
