@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 # This script manages the manage_my_process script.
 ### When passed the argument `start`:
 # - starts manage_my_process
